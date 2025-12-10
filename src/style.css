@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-red-50 via-pink-50 to-red-100 min-h-screen;
+  }
+}
+
+@layer components {
+  .gift-box {
+    @apply relative transition-all duration-300 hover:scale-105;
+  }
+  
+  .gift-box.opened {
+    @apply animate-pulse;
+  }
+  
+  .snowflake {
+    @apply absolute text-white opacity-70 animate-fall;
+  }
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.animate-fall {
+  animation: fall linear infinite;
+}
+
