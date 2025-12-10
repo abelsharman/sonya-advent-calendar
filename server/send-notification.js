@@ -32,16 +32,12 @@ async function sendDailyNotification() {
       notification: {
         title: `🎁 День ${day} - Новый подарок!`,
         body: 'У тебя есть подарок на сегодня! Открой календарь и узнай, где он 💝',
-        icon: 'https://sonya-advent-calendar.abelsharman.kz/pwa-192x192.png',
-        badge: 'https://sonya-advent-calendar.abelsharman.kz/pwa-192x192.png',
       },
       webpush: {
         fcmOptions: {
           link: 'https://sonya-advent-calendar.abelsharman.kz' // ЗАМЕНИ НА СВОЙ ДОМЕН!
         },
         notification: {
-          icon: 'https://sonya-advent-calendar.abelsharman.kz/pwa-192x192.png',
-          badge: 'https://sonya-advent-calendar.abelsharman.kz/pwa-192x192.png',
           vibrate: [200, 100, 200],
           requireInteraction: true,
           tag: `advent-day-${day}`,
