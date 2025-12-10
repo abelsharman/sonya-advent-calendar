@@ -31,9 +31,33 @@
         class="mt-4 bg-advent-green text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:bg-green-600 transition-all hover:scale-105">
         🔔 Включить уведомления
       </button>
-      <p v-else class="mt-4 text-green-600 font-semibold">
-        ✅ Уведомления включены!
-      </p>
+      <div v-else class="mt-4">
+        <p class="text-green-600 font-semibold">
+          ✅ Уведомления включены!
+        </p>
+        <!-- Кнопка показать токен (если скрыт) -->
+        <button 
+          v-if="!showToken && fcmToken"
+          @click="showToken = true"
+          class="mt-2 text-xs text-gray-400 hover:text-gray-600">
+          🔧 Показать токен
+        </button>
+        <!-- Показ токена для разработки -->
+        <div v-if="showToken && fcmToken" class="mt-3 bg-gray-100 rounded-lg p-3 max-w-md mx-auto">
+          <p class="text-xs text-gray-500 mb-2">FCM Token (для теста):</p>
+          <p class="text-xs text-gray-700 break-all font-mono">{{ fcmToken.slice(0, 50) }}...</p>
+          <button 
+            @click="copyToken"
+            class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600">
+            📋 Скопировать токен
+          </button>
+          <button 
+            @click="showToken = false"
+            class="mt-2 ml-2 text-gray-500 text-sm hover:text-gray-700">
+            Скрыть
+          </button>
+        </div>
+      </div>
     </header>
 
     <!-- Календарь -->
@@ -107,10 +131,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { gifts, isDayUnlocked, getGift } from './gifts.js'
-import { requestNotificationPermission, onMessageListener } from './firebase.js'
+import { requestNotificationPermission, onMessageListener, isIOS, isStandalone } from './firebase.js'
 
 const selectedDay = ref(null)
 const notificationsEnabled = ref(false)
+const showIOSInstruction = ref(false)
+const fcmToken = ref(null)
+const showToken = ref(false)
 
 // Диапазон дней с 10 по 25 декабря
 const daysRange = computed(() => {
@@ -130,16 +157,43 @@ const closeModal = () => {
 }
 
 const enableNotifications = async () => {
+  // На iOS в Safari показываем инструкцию по добавлению на домашний экран
+  if (isIOS && !isStandalone) {
+    showIOSInstruction.value = true
+    return
+  }
+  
   const token = await requestNotificationPermission()
   if (token) {
+    fcmToken.value = token
     notificationsEnabled.value = true
     localStorage.setItem('notificationsEnabled', 'true')
+    localStorage.setItem('fcmToken', token)
+    // Показываем токен для копирования
+    showToken.value = true
   }
+}
+
+const copyToken = async () => {
+  if (fcmToken.value) {
+    await navigator.clipboard.writeText(fcmToken.value)
+    alert('✅ Токен скопирован!')
+  }
+}
+
+const closeIOSInstruction = () => {
+  showIOSInstruction.value = false
 }
 
 onMounted(() => {
   // Проверяем, были ли уже включены уведомления
   notificationsEnabled.value = localStorage.getItem('notificationsEnabled') === 'true'
+  
+  // Восстанавливаем токен из localStorage
+  const savedToken = localStorage.getItem('fcmToken')
+  if (savedToken) {
+    fcmToken.value = savedToken
+  }
   
   // Слушаем входящие уведомления
   onMessageListener().then(payload => {

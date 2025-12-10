@@ -12,6 +12,13 @@ const firebaseConfig = {
   measurementId: "G-7K6TWKL22G"
 }
 
+// Определение iOS
+export const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+
+// Проверка, запущено ли как PWA (добавлено на домашний экран)
+export const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                            window.navigator.standalone === true
+
 // Инициализация Firebase
 const app = initializeApp(firebaseConfig)
 let messaging = null
