@@ -1,0 +1,13 @@
+{
+  "name": "advent-calendar-notifications",
+  "version": "1.0.0",
+  "description": "Server script for sending daily push notifications",
+  "main": "send-notification.js",
+  "scripts": {
+    "send": "node send-notification.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}
+

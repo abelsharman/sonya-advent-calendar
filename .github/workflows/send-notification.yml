@@ -1,0 +1,45 @@
+name: Send Daily Notification
+
+on:
+  schedule:
+    # Каждый день в 6:00 UTC (9:00 MSK / 8:00 Киев зимой)
+    # Измени время если нужно
+    - cron: '0 6 * 12 *'
+  
+  # Позволяет запустить вручную для теста
+  workflow_dispatch:
+
+jobs:
+  send-notification:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: |
+          cd server
+          npm install
+      
+      - name: Create Firebase service account file
+        run: |
+          cd server
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > serviceAccountKey.json
+      
+      - name: Send daily notification
+        run: |
+          cd server
+          npm run send
+      
+      - name: Cleanup
+        if: always()
+        run: |
+          cd server
+          rm -f serviceAccountKey.json
+
