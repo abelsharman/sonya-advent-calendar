@@ -14,7 +14,7 @@
 
     <!-- Заголовок -->
     <header class="text-center mb-8 pt-8 relative z-10">
-      <h1 class="text-4xl md:text-6xl font-bold text-advent-red mb-2 drop-shadow-lg">
+      <h1 class="text-3xl md:text-6xl font-bold text-advent-red mb-2 drop-shadow-lg">
         🎄 Адвент-календарь 🎄
       </h1>
       <p class="text-xl md:text-2xl text-pink-600 font-semibold">
