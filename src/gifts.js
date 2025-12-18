@@ -41,9 +41,9 @@ export const gifts = {
     emoji: "🧴"
   },
   18: {
-    location: "🧸 С твоими плюшевыми игрушками",
-    hint: "Мягкий подарок!",
-    emoji: "🧸"
+    location: "🗄️ На шкафу",
+    hint: "Для тёплых напитков!",
+    emoji: "☕"
   },
   19: {
     location: "🎒 В рюкзаке",
